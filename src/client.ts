@@ -1,6 +1,10 @@
-import {regen} from "@regen-network/api";
+import {RegenApi} from "@regen-network/api";
 
-export const newClient = () => regen.ClientFactory.createLCDClient({
-    restEndpoint: "http://mainnet.regen.network:1317",
-})
+export const newClient = () => RegenApi.connect({
+    connection: {
+        type: 'tendermint',
+        endpoint: 'https://api.regen.network/ledger'
+    }
+});
+
 

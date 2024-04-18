@@ -1,43 +1,47 @@
 'use client'
 
 import {newClient} from "@/client";
-import {ProjectTable} from "@/components/ecocredit/projects/ProjectTable";
 import Link from "next/link";
 import {Breadcrumb, Breadcrumbs } from "react-aria-components";
+import {QueryClientImpl} from "@regen-network/api/lib/generated/regen/ecocredit/v1/query";
 
 export default async function Page({params}: { params: { id: string } }) {
-    const client = await newClient();
-    const res = await client.regen.ecocredit.v1.project({projectId: params.id})
+    const client = new QueryClientImpl((await newClient()).queryClient);
+    const {project} = await client.Project({projectId: params.id})
+    if(!project) {
+        return <div>Project not found</div>
+    }
+
     return <div>
         <Breadcrumbs>
             <Breadcrumb><Link href="/ecocredit">Ecocredits</Link></Breadcrumb>
             <Breadcrumb><Link href="/ecocredit/projects">Projects</Link></Breadcrumb>
-            <Breadcrumb>{res.project.id}</Breadcrumb>
+            <Breadcrumb>{project.id}</Breadcrumb>
         </Breadcrumbs>
         <table>
             <TR>
                 <TH>ID</TH>
-                <TD>{res.project.id}</TD>
+                <TD>{project.id}</TD>
             </TR>
             <TR>
                 <TH>Credit Class</TH>
-                <TD><Link href={`/ecocredit/classes/${res.project.class_id}`}>{res.project.class_id}</Link></TD>
+                <TD><Link href={`/ecocredit/classes/${project.classId}`}>{project.classId}</Link></TD>
             </TR>
             <TR>
                 <TH>Jurisdiction</TH>
-                <TD>{res.project.jurisdiction}</TD>
+                <TD>{project.jurisdiction}</TD>
             </TR>
             <TR>
                 <TH>Admin</TH>
-                <TD>{res.project.admin}</TD>
+                <TD>{project.admin}</TD>
             </TR>
             <TR>
                 <TH>Metadata</TH>
-                <TD><Link href={`/data/iri/${res.project.metadata}`}>{res.project.metadata}</Link></TD>
+                <TD><Link href={`/data/iri/${project.metadata}`}>{project.metadata}</Link></TD>
             </TR>
             <TR>
                 <TH>Reference ID</TH>
-                <TD>{res.project.reference_id}</TD>
+                <TD>{project.referenceId}</TD>
             </TR>
         </table>
     </div>

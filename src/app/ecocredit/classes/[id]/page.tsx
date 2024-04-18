@@ -2,15 +2,18 @@
 
 import {newClient} from "@/client";
 import {ProjectTable} from "@/components/ecocredit/projects/ProjectTable";
-import {QueryProjectsByClassRequest} from "@regen-network/api/src/codegen/regen/ecocredit/v1/query";
 import {Breadcrumb, Breadcrumbs, Link} from "react-aria-components";
 import {Tabs, TabList, Tab, TabPanel} from 'react-aria-components';
+import {QueryClientImpl} from "@regen-network/api/lib/generated/regen/ecocredit/v1/query";
 
 export default async function Page({params}: { params: { id: string } }) {
-    const client = await newClient();
-    const res = await client.regen.ecocredit.v1.class({classId: params.id})
-    const {class: cls} = res;
-    const projectsRes = await client.regen.ecocredit.v1.projectsByClass(QueryProjectsByClassRequest.fromPartial({classId: params.id}));
+    const client = new QueryClientImpl((await newClient()).queryClient);
+    const {class: cls} = await client.Class({classId: params.id})
+    if(!cls) {
+        return <div>Class not found</div>
+    }
+
+    const projectsRes = await client.ProjectsByClass({classId: params.id})
     return <div>
         <h1>Class</h1>
         <table>
