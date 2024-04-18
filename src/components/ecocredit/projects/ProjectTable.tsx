@@ -1,12 +1,9 @@
-import {
-    QueryProjectsResponseSDKType
-} from "../../../../../../regen-js/packages/api/types/codegen/regen/ecocredit/v1/query";
 import {Cell, Column, Row, Table, TableBody, TableHeader} from "react-aria-components";
 import Link from "next/link";
-import {
+import type {
     PageResponseSDKType
-} from "../../../../../../regen-js/packages/api/src/codegen/cosmos/base/query/v1beta1/pagination";
-import {ProjectInfoSDKType} from "../../../../../../regen-js/packages/api/src/codegen/regen/ecocredit/v1/query";
+} from "@regen-network/api/types/codegen/cosmos/base/query/v1beta1/pagination";
+import {ProjectInfoSDKType} from "@regen-network/api/types/codegen/regen/ecocredit/v1/query";
 
 export type ProjectTableProps = {
     projects: ProjectInfoSDKType[];
@@ -27,7 +24,8 @@ export const ProjectTable = ({projects}: ProjectTableProps) => {
                     {projects.map((project) => (
                         <Row key={project.id} className="border">
                             <TableCell><Link href={`/ecocredit/projects/${project.id}`}>{project.id}</Link></TableCell>
-                            <TableCell><Link href={`/ecocredit/classes/${project.class_id}`}>{project.class_id}</Link></TableCell>
+                            <TableCell><Link
+                                href={`/ecocredit/classes/${project.class_id}`}>{project.class_id}</Link></TableCell>
                             <TableCell>{project.jurisdiction}</TableCell>
                             <TableCell>{project.admin}</TableCell>
                         </Row>))}
